@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package sh.coherentopensource.blockchain.optimism;
-option go_package = "github.com/coherentopensource/evm-etl/protos/go/chains/optimism";
+package sh.coherentopensource.blockchain.binance;
+option go_package = "github.com/coherentopensource/evm-etl/protos/go/chains/binance";
 
 message Data {
   Block block = 1;
@@ -31,6 +31,7 @@ message Block {
   repeated string uncles = 19;
 
   // extra fields from alchemy and quicknode
+  string base_fee_per_gas = 20; // hex string
   string mix_hash = 21;
 }
 
@@ -50,14 +51,12 @@ message Transaction {
   string r = 13;
   string s = 14;
 
-  // Optimism specific fields
-  string queue_origin = 20;
-  string l1_tx_origin = 22;
-  string l1_block_number = 23;
-  string l1_timestamp = 24;
-  string index = 25;
-  string queue_index = 26;
-  string raw_transaction = 27;
+  // extra fields from alchemy and quicknode
+  repeated Access access_list = 15;
+  string chain_id = 16; // hex string
+  string max_fee_per_gas = 17; // hex string
+  string max_priority_fee_per_gas = 18; // hex string
+  string type = 19; // hex string
 }
 
 message TransactionReceipt {
@@ -73,14 +72,9 @@ message TransactionReceipt {
   string contract_address = 10;
   repeated Log logs = 11;
   string logs_bloom = 12;
+  string type = 13; // hex string
   string root = 14;
   string status = 15; // hex string
-
-  // Optimism specific fields
-  string l1_fee = 16;
-  string l1_fee_scalar = 17;
-  string l1_gas_price = 18;
-  string l1_gas_used = 19;
 }
 
 message Log {
@@ -109,4 +103,9 @@ message CallTrace {
   string error = 10;
   string revert_reason = 11;
   repeated CallTrace calls = 12;
+}
+
+message Access {
+  string address = 1;
+  repeated string storage_keys = 2;
 }
