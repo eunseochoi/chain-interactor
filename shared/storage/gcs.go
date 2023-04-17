@@ -4,7 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"github.com/caarlos0/env/v7"
-	framework "github.com/datadaodevs/go-service-framework/util"
+	framework "github.com/coherentopensource/go-service-framework/util"
 	"github.com/pkg/errors"
 	"github.com/xitongsys/parquet-go-source/gcs"
 	"github.com/xitongsys/parquet-go/parquet"
