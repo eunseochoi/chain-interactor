@@ -25,5 +25,5 @@ To request any changes or contribute to the project, please fork the repository 
 Import the package into your project using the following import statement:
 
 ```go
-import "github.com/datadaodevs/chain-interactor"
+import "github.com/coherentopensource/chain-interactor"
 ```
