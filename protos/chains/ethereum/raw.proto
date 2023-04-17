@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package sh.datadaodevs.blockchain.ethereum;
-option go_package = "github.com/datadaodevs/chain-interactor/protos/go/chains/ethereum";
+package sh.coherentopensource.blockchain.ethereum;
+option go_package = "github.com/coherentopensource/evm-etl/protos/go/chains/ethereum";
 
 message Data {
   Block block = 1;
@@ -33,6 +33,10 @@ message Block {
   // extra fields from alchemy and quicknode
   string base_fee_per_gas = 20; // hex string
   string mix_hash = 21;
+
+  // New Shanghai fields
+  string withdrawals_root = 22;
+  repeated Withdrawal withdrawals = 23;
 }
 
 message Transaction {
@@ -67,7 +71,7 @@ message TransactionReceipt {
   string from = 5;
   string to = 6;
   string cumulative_gas_used = 7; // hex string
-  string effectiveGasPrice = 8; // hex string
+  string effective_gas_price = 8; // hex string
   string gas_used = 9; // hex string
   string contract_address = 10;
   repeated Log logs = 11;
@@ -89,6 +93,13 @@ message Log {
   repeated string topics = 9;
 }
 
+message Withdrawal {
+  string index = 1;
+  string validator_index = 2;
+  string address = 3;
+  string amount = 4;
+}
+
 // quicknode structure
 message CallTrace {
   string type = 1;
@@ -101,7 +112,7 @@ message CallTrace {
   string output = 8;
   string time = 9;
   string error = 10;
-  string revertReason = 11;
+  string revert_reason = 11;
   repeated CallTrace calls = 12;
 }
 
