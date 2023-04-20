@@ -69,10 +69,10 @@ type TxReceiptResponse struct {
 
 // CodeAtResponse is a contract code result from a node client
 type CodeAtResponse struct {
-	Jsonrpc string            `json:"jsonrpc"`
-	Id      int               `json:"id"`
-	Result  []json.RawMessage `json:"result"`
-	Error   interface{}       `json:"error"`
+	Jsonrpc string          `json:"jsonrpc"`
+	Id      int             `json:"id"`
+	Result  json.RawMessage `json:"result"`
+	Error   interface{}     `json:"error"`
 }
 
 // NewClient instantiates a new client
