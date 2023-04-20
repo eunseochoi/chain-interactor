@@ -17,6 +17,8 @@ type Client interface {
 	GetTracesForBlock(ctx context.Context, blockNumber uint64) (*TraceResponse, error)
 	GetBlockReceipt(ctx context.Context, blockNumber uint64) (*BlockReceiptResponse, error)
 	GetTransactionReceipt(ctx context.Context, txHash string) (*TxReceiptResponse, error)
+	CodeAt(ctx context.Context, address string) (*CodeAtResponse, error)
+	GetEthClient() *ethclient.Client
 }
 
 // client is an ethclient-based implementation
@@ -65,6 +67,14 @@ type TxReceiptResponse struct {
 	Error   interface{}     `json:"error"`
 }
 
+// CodeAtResponse is a contract code result from a node client
+type CodeAtResponse struct {
+	Jsonrpc string            `json:"jsonrpc"`
+	Id      int               `json:"id"`
+	Result  []json.RawMessage `json:"result"`
+	Error   interface{}       `json:"error"`
+}
+
 // NewClient instantiates a new client
 func NewClient(cfg *Config, logger framework.Logger) (*client, error) {
 	parsedClient, err := ethclient.Dial(cfg.NodeHost)
@@ -94,7 +104,7 @@ func MustNewClient(config *Config, logger framework.Logger) *client {
 	return client
 }
 
-// EthBlockNumber gets the most recent block number
+// GetLatestBlockNumber gets the most recent block number
 func (c *client) GetLatestBlockNumber(ctx context.Context) (uint64, error) {
 	number, err := c.parsedClient.BlockNumber(ctx)
 	if err != nil {
@@ -103,7 +113,7 @@ func (c *client) GetLatestBlockNumber(ctx context.Context) (uint64, error) {
 	return number, nil
 }
 
-// EthGetBlockByNumber gets a block by number
+// GetBlockByNumber gets a block by number
 func (c *client) GetBlockByNumber(ctx context.Context, blockNumber uint64) (*BlockResponse, error) {
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockByNumber\",\"params\":[\"%s\", true]}", util.BlockNumberToHex(blockNumber))
 	var res BlockResponse
@@ -160,6 +170,24 @@ func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*TxR
 	}
 
 	return &res, nil
+}
+
+func (c *client) CodeAt(ctx context.Context, address string) (*CodeAtResponse, error) {
+	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getCode\",\"params\":[\"%s\"]}", address)
+	var res CodeAtResponse
+	if err := c.do(ctx, stringPayload, &res); err != nil {
+		return nil, err
+	}
+	if res.Error != nil {
+		return nil, fmt.Errorf("%v", res.Error)
+	}
+
+	return &res, nil
+}
+
+// GetEthClient gets the ethClient instance
+func (c *client) GetEthClient() *ethclient.Client {
+	return c.parsedClient
 }
 
 // do makes a generic HTTP request to the given node server
