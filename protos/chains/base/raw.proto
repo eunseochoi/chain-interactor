@@ -33,7 +33,6 @@ message Block {
 
   // extra fields from alchemy and quicknode
   string mix_hash = 21;
-  optional string max_fee_per_gas = 22;
 }
 
 message Transaction {
@@ -55,6 +54,7 @@ message Transaction {
   string source_hash = 16;
   string mint = 17;
   bool is_system_tx = 18;
+  optional string max_fee_per_gas = 19;
 }
 
 message TransactionReceipt {
