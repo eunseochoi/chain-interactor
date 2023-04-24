@@ -55,6 +55,7 @@ message Transaction {
   string mint = 17;
   bool is_system_tx = 18;
   optional string max_fee_per_gas = 19;
+  optional string max_priority_fee_per_gas = 20;
 }
 
 message TransactionReceipt {
