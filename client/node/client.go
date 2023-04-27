@@ -172,8 +172,8 @@ func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*TxR
 	return &res, nil
 }
 
-func (c *client) CodeAt(ctx context.Context, address string) (*CodeAtResponse, error) {
-	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getCode\",\"params\":[\"%s\"]}", address)
+func (c *client) CodeAt(ctx context.Context, address string, blockNumber uint64) (*CodeAtResponse, error) {
+	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getCode\",\"params\":[\"%s\", \"%s\"]}", address, util.BlockNumberToHex(blockNumber))
 	var res CodeAtResponse
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
