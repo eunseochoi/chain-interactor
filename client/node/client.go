@@ -17,7 +17,7 @@ type Client interface {
 	GetTracesForBlock(ctx context.Context, blockNumber uint64) (*TraceResponse, error)
 	GetBlockReceipt(ctx context.Context, blockNumber uint64) (*BlockReceiptResponse, error)
 	GetTransactionReceipt(ctx context.Context, txHash string) (*TxReceiptResponse, error)
-	CodeAt(ctx context.Context, address string) (*CodeAtResponse, error)
+	CodeAt(ctx context.Context, address string, blockNumber uint64) (*CodeAtResponse, error)
 	GetEthClient() *ethclient.Client
 }
 
