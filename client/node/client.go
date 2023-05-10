@@ -13,7 +13,7 @@ import (
 
 type Client interface {
 	GetLatestBlockNumber(ctx context.Context) (uint64, error)
-	GetBlockByNumber(ctx context.Context, blockNumber uint64) (*BlockResponse, error)
+	GetBlockByNumber(ctx context.Context, blockNumber uint64, withTransactions bool) (*BlockResponse, error)
 	GetTracesForBlock(ctx context.Context, blockNumber uint64) (*TraceResponse, error)
 	GetBlockReceipt(ctx context.Context, blockNumber uint64) (*BlockReceiptResponse, error)
 	GetTransactionReceipt(ctx context.Context, txHash string) (*TxReceiptResponse, error)
@@ -114,8 +114,8 @@ func (c *client) GetLatestBlockNumber(ctx context.Context) (uint64, error) {
 }
 
 // GetBlockByNumber gets a block by number
-func (c *client) GetBlockByNumber(ctx context.Context, blockNumber uint64) (*BlockResponse, error) {
-	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockByNumber\",\"params\":[\"%s\", true]}", util.BlockNumberToHex(blockNumber))
+func (c *client) GetBlockByNumber(ctx context.Context, blockNumber uint64, withTransactions bool) (*BlockResponse, error) {
+	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockByNumber\",\"params\":[\"%s\", %t]}", util.BlockNumberToHex(blockNumber), withTransactions)
 	var res BlockResponse
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
