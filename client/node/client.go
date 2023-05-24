@@ -75,6 +75,14 @@ type CodeAtResponse struct {
 	Error   interface{}     `json:"error"`
 }
 
+// GetStorageAtResponse returns the value from a storage position at a given address
+type GetStorageAtResponse struct {
+	Jsonrpc string          `json:"jsonrpc"`
+	Id      int             `json:"id"`
+	Result  json.RawMessage `json:"result"`
+	Error   interface{}     `json:"error"`
+}
+
 // NewClient instantiates a new client
 func NewClient(cfg *Config, logger framework.Logger) (*client, error) {
 	parsedClient, err := ethclient.Dial(cfg.NodeHost)
@@ -188,6 +196,19 @@ func (c *client) CodeAt(ctx context.Context, address string, blockNumber uint64)
 // GetEthClient gets the ethClient instance
 func (c *client) GetEthClient() *ethclient.Client {
 	return c.parsedClient
+}
+
+func (c *client) GetStorageAt(ctx context.Context, address string, position string, blockNumber uint64) (*GetStorageAtResponse, error) {
+	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getStorageAt\",\"params\":[\"%s\", \"%s\", \"%s\"]}", address, position, util.BlockNumberToHex(blockNumber))
+	var res GetStorageAtResponse
+	if err := c.do(ctx, stringPayload, &res); err != nil {
+		return nil, err
+	}
+	if res.Error != nil {
+		return nil, fmt.Errorf("%v", res.Error)
+	}
+
+	return &res, nil
 }
 
 // do makes a generic HTTP request to the given node server
