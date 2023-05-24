@@ -19,6 +19,7 @@ type Client interface {
 	GetTransactionReceipt(ctx context.Context, txHash string) (*TxReceiptResponse, error)
 	CodeAt(ctx context.Context, address string, blockNumber uint64) (*CodeAtResponse, error)
 	GetEthClient() *ethclient.Client
+	GetStorageAt(ctx context.Context, address string, position string, blockNumber uint64) (*GetStorageAtResponse, error)
 }
 
 // client is an ethclient-based implementation
