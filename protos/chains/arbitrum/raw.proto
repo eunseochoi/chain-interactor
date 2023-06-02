@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package sh.coherentopensource.blockchain.arbitrum;
+option go_package = "github.com/coherentopensource/evm-etl/protos/go/chains/arbitrum";
+
+message Data {
+  Block block = 1;
+  repeated TransactionReceipt transaction_receipts = 2;
+  repeated CallTrace call_traces = 3;
+}
+
+message Block {
+  string number = 1;
+  string hash = 2;
+  string parent_hash = 3;
+  string nonce = 4;
+  string sha3_uncles = 5;
+  string logs_bloom = 6;
+  string transactions_root = 7;
+  string state_root = 8;
+  string receipts_root = 9;
+  string miner = 10;
+  string difficulty = 11;
+  string total_difficulty = 12;
+  string extra_data = 13;
+  string size = 14;
+  string gas_limit = 15;
+  string gas_used = 16;
+  string timestamp = 17;
+  repeated Transaction transactions = 18;
+  repeated string uncles = 19;
+  string mix_hash = 21;
+}
+
+message Transaction {
+  string block_hash = 1;
+  string block_number = 2;
+  string from = 3;
+  string gas = 4;
+  string gas_price = 5;
+  string hash = 6;
+  string input = 7;
+  string nonce = 8;
+  string to = 9;
+  string transaction_index = 10;
+  string value = 11;
+  string type = 12;
+  string chain_id = 13;
+  string v = 14;
+  string r = 15;
+  string s = 16;
+}
+message TransactionReceipt {
+  string transactionHash = 1;
+  string transactionIndex = 2; // hex string
+  string blockHash = 3;
+  string blockNumber = 4; // hex string
+  string from = 5;
+  string to = 6;
+  string cumulativeGasUsed = 7; // hex string
+  string effectiveGasPrice = 8; // hex string
+  string gasUsed = 9; // hex string
+  string contractAddress = 10;
+  repeated Log logs = 11;
+  string logsBloom = 12;
+  string root = 14;
+  string status = 15; // hex string
+
+  // Arbitrum specific fields
+  string l1Fee = 16;
+  string l1FeeScalar = 17;
+  string l1GasPrice = 18;
+  string l1GasUsed = 19;
+}
+
+message Log {
+  bool removed = 1;
+  string logIndex = 2; // hex string
+  string transactionIndex = 3; // hex string
+  string transactionHash = 4;
+  string blockNumber = 5; // hex string
+  string blockHash = 6;
+  string address = 7;
+  string data = 8;
+  repeated string topics = 9;
+}
+
+// quicknode structure
+message Transfer {
+  string purpose = 1;
+  string from = 2;
+  string to = 3;
+  string value = 4;
+}
+
+message Call {
+  string type = 1;
+  string from = 2;
+  string to = 3;
+  string value = 4;
+  string gas = 5;
+  string gasUsed = 6;
+  string input = 7;
+  string output = 8;
+  repeated Transfer beforeEVMTransfers = 9;
+  repeated Transfer afterEVMTransfers = 10;
+  repeated Call calls = 11;
+}
+
+message CallTrace {
+  Call result = 1;
+}
